@@ -19,20 +19,20 @@ export class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { searchQuery, currentPage } = this.state;
-    if (prevState.currentPage !== currentPage) {
+    if (
+      prevState.currentPage !== currentPage ||
+      prevState.searchQuery !== searchQuery
+    ) {
       this.fetchImages();
     }
   }
 
   handleSubmit = query => {
-    this.setState(
-      {
-        searchQuery: query,
-        images: [],
-        currentPage: 1,
-      },
-      this.fetchImages
-    );
+    this.setState({
+      searchQuery: query,
+      images: [],
+      currentPage: 1,
+    });
   };
 
   handleLoadMore = () => {
@@ -92,7 +92,7 @@ export class App extends Component {
           <div style={{ marginTop: '20px' }}>
             <Button
               onClick={this.handleLoadMore}
-              isLoading={isLoading}
+              disabled={isLoading}
               hasMoreImages={hasMoreImages}
             >
               Load More
