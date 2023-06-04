@@ -17,8 +17,9 @@ export class App extends Component {
     modalImageUrl: '',
   };
 
-  componentDidMount() {
-    if (this.state.searchQuery) {
+  componentDidUpdate(prevProps, prevState) {
+    const { searchQuery, currentPage } = this.state;
+    if (prevState.currentPage !== currentPage) {
       this.fetchImages();
     }
   }
@@ -35,12 +36,9 @@ export class App extends Component {
   };
 
   handleLoadMore = () => {
-    this.setState(
-      prevState => ({
-        currentPage: prevState.currentPage + 1,
-      }),
-      this.fetchImages
-    );
+    this.setState(prevState => ({
+      currentPage: prevState.currentPage + 1,
+    }));
   };
 
   handleImageClick = imageUrl => {
