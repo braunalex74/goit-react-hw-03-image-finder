@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Modal } from './Modal/Modal';
 import { Button } from './utils/Button';
 import { Loader } from './utils/Loader';
+import { fetchImages } from './api';
 
 export class App extends Component {
   state = {
@@ -48,35 +47,27 @@ export class App extends Component {
     });
   };
 
+  fetchImages = () => {
+    const { searchQuery, currentPage } = this.state;
+    this.setState({ isLoading: true });
+    fetchImages(searchQuery, currentPage)
+      .then(newImages => {
+        this.setState(prevState => ({
+          images: [...prevState.images, ...newImages],
+          isLoading: false,
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ isLoading: false });
+      });
+  };
+
   handleCloseModal = () => {
     this.setState({
       showModal: false,
       modalImageUrl: '',
     });
-  };
-
-  fetchImages = async () => {
-    const { searchQuery, currentPage } = this.state;
-
-    try {
-      this.setState({
-        isLoading: true,
-      });
-
-      const response = await axios.get(
-        `https://pixabay.com/api/?key=${'35196803-673541e2c14d14661bda49ca7'}&q=${searchQuery}&page=${currentPage}&per_page=12`
-      );
-
-      this.setState(prevState => ({
-        images: [...prevState.images, ...response.data.hits],
-      }));
-    } catch (error) {
-      console.log(error);
-    } finally {
-      this.setState({
-        isLoading: false,
-      });
-    }
   };
 
   render() {

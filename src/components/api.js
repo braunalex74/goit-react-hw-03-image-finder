@@ -11,7 +11,7 @@ export const fetchImages = async (searchQuery, currentPage, perPage = 12) => {
     );
     return response.data.hits;
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching images:', error);
     return [];
   }
 };
